@@ -1,0 +1,12 @@
+[package]
+name = "rust-graph-server"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+plotly = "0.8"
+json = "0.12.4"
+
+[[bin]]
+name = "rust-graph-server"
+path = "main.rs"
