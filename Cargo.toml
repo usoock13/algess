@@ -6,7 +6,9 @@ edition = "2024"
 [dependencies]
 plotly = "0.8"
 json = "0.12.4"
+open = "5.0"
+clap = { version = "4.5.53", features = ["derive"] }
 
 [[bin]]
 name = "rust-graph-server"
-path = "main.rs"
+path = "src/main.rs"
