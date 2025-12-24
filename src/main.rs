@@ -2,12 +2,10 @@ use std::net::UdpSocket;
 use plotly::{ Plot, Scatter };
 
 use std::io::{ Write };
-use std::collections::HashMap;
 
 use std::thread;
 
 mod algess;
-use crate::algess::structs::Channel;
 use crate::algess::cmd::{ start_recv_stdin };
 
 const DRAW_COMMAND: &str = "draw";
@@ -16,7 +14,6 @@ const OPEN_COMMAND: &str = "open";
 
 fn main() {
     let mut table: Vec<(f64, f64)> = vec![];
-    let mut channelMap: HashMap::<String, Channel> = HashMap::new();
 
     let receiver = UdpSocket::bind("127.0.0.1:2025").expect("error: ");
     let sender = UdpSocket::bind("127.0.0.1:0").expect("error: ");

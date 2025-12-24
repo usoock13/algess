@@ -10,4 +10,5 @@ pub enum ChannelAction {
         #[arg(short, long)]
         name: String,
     },
+    Show { }
 }
