@@ -1,7 +1,7 @@
 use std::io::{ Write };
 use clap::{ Parser, Subcommand };
 
-use crate::algess::channels;
+use crate::algess::channels::{self, Channel};
 
 pub fn start_recv_stdin() {
     loop {
@@ -26,13 +26,13 @@ fn parse_cmd(command: &str) {
 
     match StdInput::try_parse_from(cmd) {
         Ok(args) => {
-            proccess_cmd(args);
+            handle_cmd(args);
         },
         Err(err) => println!("{}", err),
     }
 }
 
-fn proccess_cmd(args: StdInput) {
+fn handle_cmd(args: StdInput) {
     match args.command {
         Cmd::Channel { action } => {
             match action {
@@ -41,12 +41,13 @@ fn proccess_cmd(args: StdInput) {
                     chm.create_channel(name);
                 },
                 channel::ChannelAction::Delete { name } => {
-
+                    let mut chm = channels::get_channel_manager().lock().unwrap();
+                    chm.delete_channel(name);
                 },
-                channel::ChannelAction::Show { } => {
+                channel::ChannelAction::Show { count } => {
                     let channels = channels::get_channel_manager().lock().unwrap().get_channels();
-                    channels.iter().for_each(|ch: &String| {
-                        println!("{}", ch);
+                    channels.iter().for_each(|ch: &Channel| {
+                        println!("{} {}", ch.name, count);
                     });
                 },
             };

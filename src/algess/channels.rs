@@ -21,11 +21,16 @@ impl ChannelManager {
         self.channel_map.entry(name).or_insert(channel);
     }
 
-    pub fn get_channels(&self) -> Vec<String> {
-        self.channel_map.keys().cloned().collect()
+    pub fn delete_channel(&mut self, name: String) {
+        self.channel_map.remove(&name);
+    }
+
+    pub fn get_channels(&self) -> Vec<Channel> {
+        self.channel_map.values().cloned().collect()
     }
 }
 
+#[derive(Clone)]
 pub struct Channel {
     pub name: String,
     pub table: Vec<Data2D>,

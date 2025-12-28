@@ -8,10 +8,6 @@ use std::thread;
 mod algess;
 use crate::algess::cmd::{ start_recv_stdin };
 
-const DRAW_COMMAND: &str = "draw";
-const QUIT_COMMAND: &str = "quit";
-const OPEN_COMMAND: &str = "open";
-
 fn main() {
     let mut table: Vec<(f64, f64)> = vec![];
 
@@ -67,37 +63,7 @@ fn main() {
     println!("Start Server...");
 
     start_recv_stdin();
-    
-    // loop {
-    //     let mut input = String::new();
-    //     println!(">> ");
-    //     std::io::stdout().flush().expect("Flush 실패");
 
-    //     let res = std::io::stdin().read_line(&mut input);
-    //     match res {
-    //         Ok(_) => {
-    //             let timmed_input = input.trim();
-
-    //             match timmed_input {
-    //                 QUIT_COMMAND => {
-    //                     sender.send_to(QUIT_COMMAND.as_bytes(), "127.0.0.1:2025").expect("error: ");
-    //                     break;
-    //                 },
-    //                 DRAW_COMMAND => {
-    //                     sender.send_to(DRAW_COMMAND.as_bytes(), "127.0.0.1:2025").expect("error: ");
-    //                 },
-    //                 OPEN_COMMAND => {
-    //                     match open::that("out.html") {
-    //                         Ok(_) => continue,
-    //                         Err(e) => eprintln!("Failed to open out.html: {}", e),
-    //                     }
-    //                 }
-    //                 _ => continue,
-    //             }
-    //         },
-    //         Err(error) => panic!("error: {}", error),
-    //     }
-    // }
     background_thread.join().expect("Background thread panicked");
 }
 
