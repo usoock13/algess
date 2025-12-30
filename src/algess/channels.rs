@@ -1,5 +1,5 @@
-use std::collections::{HashMap, hash_map::Keys};
-use crate::algess::structs::{ Data2D };
+use std::collections::{ HashMap };
+use crate::algess::structs::{ Data2D, DataTable };
 
 use std::sync::{ Mutex, OnceLock };
 
@@ -25,15 +25,21 @@ impl ChannelManager {
         self.channel_map.remove(&name);
     }
 
-    pub fn get_channels(&self) -> Vec<Channel> {
-        self.channel_map.values().cloned().collect()
+    pub fn get_channel(&self, name: String) -> Option<&Channel> {
+        match self.channel_map.get(&name) {
+            Some(ch) => Some(ch),
+            None => None
+        }
+    }
+
+    pub fn get_channels(&self) -> Vec<&Channel> {
+        self.channel_map.values().collect()
     }
 }
 
-#[derive(Clone)]
 pub struct Channel {
     pub name: String,
-    pub table: Vec<Data2D>,
+    pub table: Vec<DataTable>,
 }
 impl Channel {
     fn from(name: String) -> Self {

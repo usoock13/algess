@@ -46,6 +46,7 @@ fn handle_cmd(args: StdInput) {
                 },
                 channel::ChannelAction::Show { count } => {
                     let channels = channels::get_channel_manager().lock().unwrap().get_channels();
+                    todo!("현명하게 고쳐야 함");
                     channels.iter().for_each(|ch: &Channel| {
                         println!("{} {}", ch.name, count);
                     });

@@ -7,64 +7,15 @@ use std::thread;
 
 mod algess;
 use crate::algess::cmd::{ start_recv_stdin };
+use crate::algess::server::{ listen };
 
 fn main() {
     let mut table: Vec<(f64, f64)> = vec![];
-
-    let receiver = UdpSocket::bind("127.0.0.1:2025").expect("error: ");
     let sender = UdpSocket::bind("127.0.0.1:0").expect("error: ");
-    let mut buf: [u8; 64] = [0; 64];
-
-    let background_thread = thread::spawn(move || {
-        loop {
-            let (amt, src) = receiver.recv_from(&mut buf).expect("error: ");
-            let buf = &mut buf[..amt];
     
-            let s = match str::from_utf8(buf) {
-                Ok(v) => v,
-                Err(err) => panic!("{}", err),
-            };
-    
-            match s {
-                QUIT_COMMAND => {
-                    eprintln!("QUIT");
-                    break;
-                },
-                DRAW_COMMAND => {
-                    println!("Start to draw a graph.");
-                    draw_graph(&table);
-                },
-                _ => {
-                    eprintln!("RECEIVED >> \n\t{}", s);
-                    match json::parse(s) {
-                        Ok(parsed) => {
-                            eprintln!("time : {}\nvalue : {}", parsed["time"], parsed["value"]);
-                            let time: f64 = match parsed["time"].as_number() {
-                                Some(n) => n.into(),
-                                None => panic!("error: Parsing from JsonValue to f64 was failed with {}.", parsed["time"]),
-                            };
-                            let value: f64 = match parsed["value"].as_number() {
-                                Some(n) => n.into(),
-                                None => panic!("error: Parsing from JsonValue to f64 was failed with {}.", parsed["value"]),
-                            };
-
-                            table.push((time, value));
-                            println!("count: {}\nlast: ({}, {})", table.iter().count(), time, value);
-                        },
-                        Err(err) => {
-                            panic!("error: Failed {}", err);
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    println!("Start Server...");
-
+    listen().join().expect("UDP Listen server thread panicked.");
+    println!("\nSuccess to starting server.\n");
     start_recv_stdin();
-
-    background_thread.join().expect("Background thread panicked");
 }
 
 fn draw_graph(table: &Vec<(f64, f64)>) {
